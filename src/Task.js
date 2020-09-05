@@ -27,10 +27,11 @@ export class Task extends Component {
         {(provided, snapshot) => (
           <Container
             {...provided.draggableProps}
+            {...provided.dragHandleProps}
             ref={provided.innerRef}
             isDragging={snapshot.isDragging}
           >
-            <Handle {...provided.dragHandleProps}></Handle>
+            {/* <Handle {...provided.dragHandleProps}></Handle> */}
             {this.props.task.content}
           </Container>
         )}
