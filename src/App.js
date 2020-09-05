@@ -12,6 +12,14 @@ const Container = styled.div`
 export class App extends Component {
   state = initialData;
 
+  onDragStart = (start) => {
+    const homeIndex = this.state.columnOrder.indexOf(start.source.droppableId);
+
+    this.setState({
+      homeIndex,
+    });
+  };
+
   onDragUpdate = (update) => {
     const { destination } = update;
     const opacity = destination
@@ -37,6 +45,9 @@ export class App extends Component {
       }
     }
     */
+    this.setState({
+      homeIndex: null,
+    });
 
     const { destination, source, draggableId } = result;
 
@@ -107,18 +118,26 @@ export class App extends Component {
   render() {
     return (
       <DragDropContext
+        onDragStart={this.onDragStart}
         onDragUpdate={this.onDragUpdate}
         onDragEnd={this.onDragEnd}
       >
         <Container>
-          {this.state.columnOrder.map((columnId) => {
+          {this.state.columnOrder.map((columnId, index) => {
             const column = this.state.columns[columnId];
             const tasks = column.taskIds.map(
-              (taskId) => this.state.tasks[taskId] // Uses lookup to map tasks in order
+              (taskId) => this.state.tasks[taskId]
             );
 
+            const isDropDisabled = index < this.state.homeIndex;
+
             return (
-              <Column key={column.id} column={column} tasks={tasks}></Column>
+              <Column
+                key={column.id}
+                column={column}
+                tasks={tasks}
+                isDropDisabled={isDropDisabled}
+              />
             );
           })}
         </Container>
